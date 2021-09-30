@@ -1,13 +1,13 @@
-package DataHandling;
+package DataHandling.DataTypes;
 
 public class User {
-  private int user_id;
+  private final int user_id;
   private String weight;
   private String bust_size;
   private String height;
   private double age;
   private String body_type;
-  private String horoscope;
+  private final String horoscope;
 
   public User(int user_id, String weight, String bust_size, String height, Double age, String body_type, String horoscope) {
     this.user_id = user_id;
@@ -25,5 +25,25 @@ public class User {
 
   public String getWeight() {
     return weight;
+  }
+
+  public String getBust() {
+    return bust_size;
+  }
+
+  public String getHeight() {
+    return height;
+  }
+
+  public double getAge() {
+    return age;
+  }
+
+  public String getBody() {
+    return body_type;
+  }
+
+  public String getHoroscope() {
+    return horoscope;
   }
 }
