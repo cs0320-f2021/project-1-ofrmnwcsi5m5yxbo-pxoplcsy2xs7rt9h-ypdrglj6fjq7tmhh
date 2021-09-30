@@ -15,6 +15,7 @@ public class DataHandler {
     this.jsonReader = new JsonReader();
   }
 
+  //read users from a json file specified by filepath
   public User[] readUsersFromFile(String filepath) throws IOException {
     Scanner sc = new Scanner(new File(filepath));
     sc.useDelimiter("\\u001a");
@@ -23,6 +24,7 @@ public class DataHandler {
     return jsonReader.readUser(json);
   }
 
+  //read reviews from a json file specified by filepath
   public Review[] readReviewsFromFile(String filepath) throws IOException {
     Scanner sc = new Scanner(new File(filepath));
     sc.useDelimiter("\\u001a");
@@ -31,6 +33,7 @@ public class DataHandler {
     return jsonReader.readReview(json);
   }
 
+  //read rentals from a json file specified by filepath
   public Rental[] readRentalsFromFile(String filepath) throws IOException {
     Scanner sc = new Scanner(new File(filepath));
     sc.useDelimiter("\\u001a");
