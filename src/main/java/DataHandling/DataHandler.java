@@ -2,6 +2,7 @@ package DataHandling;
 
 import DataHandling.DataTypes.*;
 
+import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
@@ -15,30 +16,24 @@ public class DataHandler {
     this.jsonReader = new JsonReader();
   }
 
-  //read users from a json file specified by filepath
-  public User[] readUsersFromFile(String filepath) throws IOException {
+  //read specified datatype from a json file specified by filepath
+  public DataType[] readFromFile(String filepath, String type) throws IOException {
     Scanner sc = new Scanner(new File(filepath));
     sc.useDelimiter("\\u001a");
     String json = sc.next();
     sc.close();
-    return jsonReader.readUser(json);
+    return jsonReader.readData(json, type);
   }
 
-  //read reviews from a json file specified by filepath
-  public Review[] readReviewsFromFile(String filepath) throws IOException {
-    Scanner sc = new Scanner(new File(filepath));
-    sc.useDelimiter("\\u001a");
-    String json = sc.next();
-    sc.close();
-    return jsonReader.readReview(json);
+  public User[] readUsersFromAPI() {
+
   }
 
-  //read rentals from a json file specified by filepath
-  public Rental[] readRentalsFromFile(String filepath) throws IOException {
-    Scanner sc = new Scanner(new File(filepath));
-    sc.useDelimiter("\\u001a");
-    String json = sc.next();
-    sc.close();
-    return jsonReader.readRental(json);
+  public Review[] readReviewsFromAPI() {
+
+  }
+
+  public Rental[] readRentalsFromFile() {
+
   }
 }

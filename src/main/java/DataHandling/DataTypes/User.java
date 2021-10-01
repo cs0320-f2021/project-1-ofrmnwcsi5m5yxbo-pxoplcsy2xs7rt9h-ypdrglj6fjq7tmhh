@@ -1,6 +1,8 @@
 package DataHandling.DataTypes;
 
-public class User {
+import java.util.Objects;
+
+public class User implements DataType {
   private final int user_id;
   private String weight;
   private String bust_size;
@@ -19,7 +21,7 @@ public class User {
     this.horoscope = horoscope;
   }
 
-  public int getID() {
+  public int getUser_id() {
     return user_id;
   }
 
@@ -27,7 +29,7 @@ public class User {
     return weight;
   }
 
-  public String getBust() {
+  public String getBust_size() {
     return bust_size;
   }
 
@@ -39,11 +41,38 @@ public class User {
     return age;
   }
 
-  public String getBody() {
+  public String getBody_type() {
     return body_type;
   }
 
   public String getHoroscope() {
     return horoscope;
+  }
+
+  @Override
+  public boolean equals(DataType d) {
+    return false;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    User user = (User) o;
+    return user_id == user.user_id && Double.compare(user.age, age) == 0 &&
+        Objects.equals(weight, user.weight) &&
+        Objects.equals(bust_size, user.bust_size) &&
+        Objects.equals(height, user.height) &&
+        Objects.equals(body_type, user.body_type) &&
+        Objects.equals(horoscope, user.horoscope);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(user_id, weight, bust_size, height, age, body_type, horoscope);
   }
 }
