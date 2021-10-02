@@ -1,6 +1,6 @@
 package DataHandling.DataTypes;
 
 public interface DataType {
-  boolean equals(DataType d);
+  boolean equals(Object o);
   int hashCode();
 }

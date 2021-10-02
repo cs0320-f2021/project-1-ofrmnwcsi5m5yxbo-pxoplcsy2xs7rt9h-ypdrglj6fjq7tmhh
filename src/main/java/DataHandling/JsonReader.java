@@ -27,11 +27,11 @@ public class JsonReader {
 
   public DataType[] readData(String json, String type) {
     switch (type) {
-      case "user":
+      case "users":
         return readUser(json);
-      case "review":
+      case "reviews":
         return readReview(json);
-      case "rental":
+      case "rent":
         return readRental(json);
       default:
         return null;

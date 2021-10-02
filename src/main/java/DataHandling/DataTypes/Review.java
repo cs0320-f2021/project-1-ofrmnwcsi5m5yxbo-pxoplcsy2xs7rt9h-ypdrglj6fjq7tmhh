@@ -9,6 +9,7 @@ public class Review implements DataType {
   private final Date review_date;
   private final int id;
 
+
   public Review(String review_text, String review_summary, String review_date, Number id) {
     this.review_text = review_text;
     this.review_summary = review_summary;
@@ -26,11 +27,6 @@ public class Review implements DataType {
   }
   public int getID() {
     return id;
-  }
-
-  @Override
-  public boolean equals(DataType d) {
-    return false;
   }
 
   @Override

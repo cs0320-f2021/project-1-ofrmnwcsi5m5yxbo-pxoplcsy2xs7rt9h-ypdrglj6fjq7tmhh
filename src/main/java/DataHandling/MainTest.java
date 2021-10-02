@@ -1,7 +1,6 @@
 package DataHandling;
 
 import DataHandling.DataTypes.DataType;
-import DataHandling.DataTypes.User;
 
 import java.io.IOException;
 import java.net.http.HttpRequest;
@@ -15,7 +14,8 @@ public class MainTest {
     String returned = ac.makeRequest(req);
     DataHandler handler = new DataHandler();
     String filename = "data/project-1/justrentSMALL.json";
-    DataType[] col = jsonReader.readData(returned, "user");
+    //DataType[] col = jsonReader.readData(returned, "user");
+    DataType[] col = handler.readUsersFromAPI();
     System.out.println();
   }
 }

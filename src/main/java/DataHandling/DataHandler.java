@@ -2,7 +2,6 @@ package DataHandling;
 
 import DataHandling.DataTypes.*;
 
-import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
@@ -25,15 +24,15 @@ public class DataHandler {
     return jsonReader.readData(json, type);
   }
 
-  public User[] readUsersFromAPI() {
-
+  public DataType[] readUsersFromAPI() {
+    return apiAggregator.aggregateResults("users");
   }
 
-  public Review[] readReviewsFromAPI() {
-
+  public DataType[] readReviewsFromAPI() {
+    return apiAggregator.aggregateResults("reviews");
   }
 
-  public Rental[] readRentalsFromFile() {
-
+  public DataType[] readRentalsFromFile() {
+    return apiAggregator.aggregateResults("rent");
   }
 }

@@ -11,12 +11,12 @@ public class User implements DataType {
   private String body_type;
   private final String horoscope;
 
-  public User(int user_id, String weight, String bust_size, String height, Double age, String body_type, String horoscope) {
-    this.user_id = user_id;
+  public User(Number user_id, String weight, String bust_size, String height, Number age, String body_type, String horoscope) {
+    this.user_id = user_id.intValue();
     this.weight = weight;
     this.bust_size = bust_size;
     this.height = height;
-    this.age = age;
+    this.age = age.doubleValue();
     this.body_type = body_type;
     this.horoscope = horoscope;
   }
@@ -47,11 +47,6 @@ public class User implements DataType {
 
   public String getHoroscope() {
     return horoscope;
-  }
-
-  @Override
-  public boolean equals(DataType d) {
-    return false;
   }
 
   @Override

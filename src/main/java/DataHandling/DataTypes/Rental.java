@@ -52,11 +52,6 @@ public class Rental implements DataType {
   }
 
   @Override
-  public boolean equals(DataType d) {
-    return false;
-  }
-
-  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;
