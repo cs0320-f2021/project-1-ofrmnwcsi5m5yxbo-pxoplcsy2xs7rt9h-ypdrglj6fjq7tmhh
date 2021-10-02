@@ -15,6 +15,12 @@ public class DataHandler {
     this.jsonReader = new JsonReader();
   }
 
+  /**
+   * @param filepath: path of file.
+   * @param type: pass "users" for users, "reviews" for reviews, and "rent" for rentals.
+   * @return array with specified type of data.
+   * @throws IOException
+   */
   //read specified datatype from a json file specified by filepath
   public DataType[] readFromFile(String filepath, String type) throws IOException {
     Scanner sc = new Scanner(new File(filepath));
@@ -24,15 +30,13 @@ public class DataHandler {
     return jsonReader.readData(json, type);
   }
 
-  public DataType[] readUsersFromAPI() {
-    return apiAggregator.aggregateResults("users");
-  }
+  //read data from the api endpoints they gave us.
 
-  public DataType[] readReviewsFromAPI() {
-    return apiAggregator.aggregateResults("reviews");
-  }
-
-  public DataType[] readRentalsFromFile() {
-    return apiAggregator.aggregateResults("rent");
+  /**
+   * @param type: pass "users" for users, "reviews" for reviews, and "rent" for rentals.
+   * @return array of specified datatype.
+   */
+  public DataType[] readFromAPI(String type) {
+    return apiAggregator.aggregateResults(type);
   }
 }
