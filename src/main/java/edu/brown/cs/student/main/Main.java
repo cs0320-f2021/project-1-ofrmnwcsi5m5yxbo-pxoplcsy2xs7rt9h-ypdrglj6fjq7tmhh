@@ -80,33 +80,34 @@ public final class Main {
       String input;
       // Variables to be instantiated in REPL below
       KDTree<User> kdTree = null;
-      List<User> users = null;
-      List<Rental> rentals = null;
-      List<Review> reviews = null;
+      List<User> users = new ArrayList<>();
+      List<Rental> rentals = new ArrayList<>();
+      List<Review> reviews = new ArrayList<>();
 
       while ((input = br.readLine()) != null) {
         try {
           input = input.trim();
           String[] arguments = input.split(" ");
+
           // [SECTION:] Load user data into KDTree using DataHandler
           if (arguments[0].equals("users")) {
             // Setup List of Users
             DataHandler dataHandler = new DataHandler();
             // If using Api aggregator
             if (arguments[1].equals("online")) {
-              // TODO not sure what's going on here
-//              DataType[] data = dataHandler.readFromAPI(arguments[0]);
-//              try {
-//                data = dataHandler.readFromAPI(arguments[0]);
-//                if (data instanceof User[]) {
-//                  User[] usersArray = (User[]) data;
+              DataType[] data = dataHandler.readFromAPI(arguments[0]);
+              try {
+                data = dataHandler.readFromAPI(arguments[0]);
+                if (data instanceof User[]) {
+                  User[] usersArray = (User[]) data;
+                  Collections.addAll(users, usersArray);
 //                  users = Arrays.asList(usersArray);
-//                } else {
-//                  throw new IOException();
-//                }
-//              } catch (Exception e) {
-//                System.out.println("ERROR: Something went wrong with API aggregator");
-//              }
+                } else {
+                  throw new IOException();
+                }
+              } catch (Exception e) {
+                System.out.println("ERROR: Something went wrong with API aggregator");
+              }
             }
             // If reading straight from a .json file
             else {
@@ -114,7 +115,8 @@ public final class Main {
               try {
                 if (data instanceof User[]) {
                   User[] usersArray = (User[]) data;
-                  users = Arrays.asList(usersArray);
+                  Collections.addAll(users, usersArray);
+//                  users = Arrays.asList(usersArray);
                 } else {
                   throw new IOException();
                 }
@@ -431,9 +433,4 @@ public final class Main {
       return Double.compare(o1.getAge(), o2.getAge());
     }
   }
-
-
-
-
-
 }
