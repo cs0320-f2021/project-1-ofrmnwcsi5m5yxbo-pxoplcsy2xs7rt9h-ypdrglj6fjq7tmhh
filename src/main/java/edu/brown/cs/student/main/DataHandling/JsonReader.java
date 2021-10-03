@@ -1,9 +1,9 @@
-package DataHandling;
+package edu.brown.cs.student.main.DataHandling;
 
-import DataHandling.DataTypes.DataType;
-import DataHandling.DataTypes.Rental;
-import DataHandling.DataTypes.Review;
-import DataHandling.DataTypes.User;
+import edu.brown.cs.student.main.DataHandling.DataTypes.DataType;
+import edu.brown.cs.student.main.DataHandling.DataTypes.Rental;
+import edu.brown.cs.student.main.DataHandling.DataTypes.Review;
+import edu.brown.cs.student.main.DataHandling.DataTypes.User;
 import com.google.gson.Gson;
 
 public class JsonReader {

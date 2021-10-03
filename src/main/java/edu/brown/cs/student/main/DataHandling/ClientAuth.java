@@ -1,4 +1,6 @@
-package DataHandling;
+package edu.brown.cs.student.main.DataHandling;
+
+import edu.brown.cs.student.main.DataHandling.FileParser;
 
 /**
  * This simple class is for reading the API Key from your secret file (THAT SHOULD NOT BE PUSHED TO GIT).

@@ -1,6 +1,6 @@
-package DataHandling;
+package edu.brown.cs.student.main.DataHandling;
 
-import DataHandling.DataTypes.*;
+import edu.brown.cs.student.main.DataHandling.DataTypes.*;
 
 import java.io.File;
 import java.io.IOException;

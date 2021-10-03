@@ -1,4 +1,4 @@
-package DataHandling.DataTypes;
+package edu.brown.cs.student.main.DataHandling.DataTypes;
 
 import java.util.Date;
 import java.util.Objects;

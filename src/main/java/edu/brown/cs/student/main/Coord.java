@@ -1,15 +1,47 @@
-package main.java.edu.brown.cs.student.main;
+package edu.brown.cs.student.main;
 
+/**
+ * An interface for Coordinate to be used in KDTree
+ *
+ */
 public interface Coord<T> {
 
 
-  //calc distance from a T object to other
-  public double calcDistance(T other);
 
-  //axis is either 0,1,2 in this case
-  public double calcAxisDistance(int axis ,T other);
+  /**
+   * Calculates euclidean distance from one object to another
+   *
+   * @param other - other object to calculate distance from
+   *
+   */
+  double calcDistance(T other);
 
+  /**
+   * Calculates relevant axis distance from one object to another
+   *
+   * @param axis - the axis number to use, must be zero-index and follow order of list of
+   *             Comparators in KDTree
+   * @param other - other object to calculate distance from
+   */
+  double calcAxisDistance(int axis ,T other);
 
-  //max value for a coord
-  public T maxValue();
+  /**
+   * Returns an unique identification number for object
+   *
+   */
+  Integer getIdentity();
+
+  /**
+   * Returns group(classification) that object is a part of
+   *
+   */
+  String getGroup();
+
+  /**
+   * Returns object as a coordinate string
+   *
+   * i.e. (x,y,z)
+   *
+   */
+  String coordString();
 }

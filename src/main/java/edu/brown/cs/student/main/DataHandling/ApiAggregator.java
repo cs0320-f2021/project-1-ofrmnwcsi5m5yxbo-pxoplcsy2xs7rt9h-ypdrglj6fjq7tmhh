@@ -1,6 +1,7 @@
-package DataHandling;
+package edu.brown.cs.student.main.DataHandling;
 
-import DataHandling.DataTypes.*;
+import edu.brown.cs.student.main.DataHandling.DataTypes.*;
+import edu.brown.cs.student.main.DataHandling.JsonReader;
 
 import java.net.http.HttpRequest;
 import java.util.ArrayList;

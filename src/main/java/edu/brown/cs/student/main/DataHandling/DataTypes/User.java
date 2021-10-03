@@ -1,8 +1,13 @@
-package DataHandling.DataTypes;
+package edu.brown.cs.student.main.DataHandling.DataTypes;
 
+import edu.brown.cs.student.main.Coord;
+
+import java.util.List;
 import java.util.Objects;
 
-public class User implements DataType {
+//DO COORD METHODS
+
+public class User implements DataType, Coord<User> {
   private final int user_id;
   private String weight;
   private String bust_size;
@@ -49,6 +54,7 @@ public class User implements DataType {
     return horoscope;
   }
 
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -69,5 +75,35 @@ public class User implements DataType {
   @Override
   public int hashCode() {
     return Objects.hash(user_id, weight, bust_size, height, age, body_type, horoscope);
+  }
+
+  @Override
+  public double calcDistance(User other) {
+    return 0;
+  }
+
+  @Override
+  public double calcAxisDistance(int axis, User other) {
+    return 0;
+  }
+
+  @Override
+  public Integer getIdentity() {
+    return null;
+  }
+
+  @Override
+  public List<String> allGroups() {
+    return null;
+  }
+
+  @Override
+  public String getGroup() {
+    return horoscope;
+  }
+
+  @Override
+  public String coordString() {
+    return null;
   }
 }

@@ -1,20 +1,20 @@
-package main.java.edu.brown.cs.student.main;
+package edu.brown.cs.student.main;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
+import edu.brown.cs.student.main.DataHandling.DataTypes.Test3D;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -26,8 +26,6 @@ import spark.Spark;
 import spark.TemplateViewRoute;
 import spark.template.freemarker.FreeMarkerEngine;
 
-import javax.naming.NameNotFoundException;
-
 /**
  * The Main class of our project. This is where execution begins.
  */
@@ -35,12 +33,6 @@ public final class Main {
 
   // use port 4567 by default when running server
   private static final int DEFAULT_PORT = 4567;
-
-  private List<Integer> starIds = new ArrayList<Integer>();
-  private List<String> starNames = new ArrayList<String>();
-  private List<Double> starXValues = new ArrayList<Double>();
-  private List<Double> starYValues = new ArrayList<Double>();
-  private List<Double> starZValues = new ArrayList<Double>();
 
   /**
    * The initial method called when execution begins.
@@ -74,54 +66,76 @@ public final class Main {
     }
 
     // TODO: Add your REPL here!
-    String methodName = "";
     try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
       String input;
       while ((input = br.readLine()) != null) {
         try {
           input = input.trim();
           String[] arguments = input.split(" ");
-          String[] name = input.split("\"");
 
-          // TODO: complete your REPL by adding commands for addition "add" and subtraction
-          //  "subtract"
-          if (arguments[0].equals("add")) {
-            System.out.println(new MathBot().add(Double.parseDouble(arguments[1]),
-                Double.parseDouble(arguments[2])));
-          } else if (arguments[0].equals("subtract")) {
-            System.out.println(new MathBot().subtract(Double.parseDouble(arguments[1]),
-                Double.parseDouble(arguments[2])));
-          } else if (arguments[0].equals("stars")) {
-            methodName = "stars";
-            loadStars(arguments[1]);
-          } else if (arguments[0].equals("naive_neighbors")) {
-            methodName = "naive_neighbors";
-            if (name.length > 1) {
-              naiveNeighbors(Integer.parseInt(arguments[1]), name[1]);
-            } else if (arguments.length == 5) {
-              naiveNeighbors(
-                  Integer.parseInt(arguments[1]), Double.parseDouble(arguments[2]),
-                  Double.parseDouble(arguments[3]), Double.parseDouble(arguments[4]));
+          // TODO: complete your REPL by adding commands
+
+
+          //KD TREE MUST BE SETUP BEFORE USING METHODS
+
+
+         if (arguments[0].equals("similar")){
+
+            if (arguments.length == 3) {
+              //similar <k> <some_user_id>
+
+              //FIND object with same id as <some_user_id> to use as TARGET
+
+              //CALL 'similar' method from KDTree object with <k> <TARGET> <exclude == TRUE>
+
+              //PRINT ids from List returned
+
+            } else if ((arguments.length == 5)){
+              //similar <k> <weight in lbs> <height in inches> <age in years>
+
+
+              //CREATE object with same values as <weight in lbs> <height in inches> <age in years>
+              //any other attributes part of datatype can be random
+              //will be used as TARGET
+
+              //CALL 'similar' method from KDTree object with <k> <TARGET> <exclude == FALSE>
+
+              //PRINT ids from List returned
             }
-          } else if (arguments[0].equals("star_data")) {
-            for (int i = 0; i < starIds.size(); i++) {
-              System.out.println(starIds.get(i) + " " + starNames.get(i) + " "
-                  + starXValues.get(i) + " " + starYValues.get(i) + " " + starZValues.get(i));
+
+          } else if (arguments[0].equals("classify")) {
+            if (arguments.length == 3) {
+              //classify <k> <some_user_id>
+
+              //FIND object with same id as <some_user_id> to use as TARGET
+
+              //Collect all possible groups i.e. all horoscopes
+
+              //CALL 'classify' method from KDTree object with <k> <TARGET> <exclude == TRUE> <groups>
+
+              //PRINT each key value pair from Map returned
+
+            } else if ((arguments.length == 5)){
+
+              //classify <k> <weight in lbs> <height in inches> <age in years>
+
+              //CREATE object with same attribute values as <weight in lbs> <height in inches> <age in years>
+              //all other attributes can be random
+              //will be used as TARGET
+
+              //Collect all possible groups i.e. all horoscopes
+
+              //CALL 'classify' method from KDTree object with <k> <TARGET> <exclude == TRUE> <groups>
+
+              //PRINT each key value pair from Map returned
+
             }
-          } else {
+          }
+          else {
             throw new IllegalArgumentException();
           }
-        } catch (NameNotFoundException e) {
-          System.out.println("ERROR: Invalid star name");
         } catch (IllegalArgumentException e) {
           System.out.println("ERROR: Invalid input for REPL");
-        } catch (ArrayIndexOutOfBoundsException e) {
-          if (methodName.equals("stars")) {
-            System.out.println("ERROR: stars method is missing file name");
-          } else if (methodName.equals("naive_neighbors")) {
-            System.out.println("ERROR: naive_neighbors is missing"
-                + "either full star position or name");
-          }
         }
       }
     } catch (Exception e) {
@@ -200,161 +214,9 @@ public final class Main {
     }
   }
 
-  /**
-   * Freshly loads in star position information
-   *
-   * @param file A CSV filename of star data
-   */
-  private void loadStars(String fileName) {
-    starIds.clear();
-    starNames.clear();
-    starXValues.clear();
-    starYValues.clear();
-    starZValues.clear();
-    int count = 0;
-    try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-      String line;
-      while ((line = br.readLine()) != null) {
-        String[] values = line.split(",");
-        if (count > 0) {
-          starIds.add(Integer.parseInt(values[0]));
-          starNames.add(values[1]);
-          starXValues.add(Double.parseDouble(values[2]));
-          starYValues.add(Double.parseDouble(values[3]));
-          starZValues.add(Double.parseDouble(values[4]));
-        } else if (count == 0) {
-          if (!(values[0].equals("StarID") && values[1].equals("ProperName")
-              && values[2].equals("X") && values[3].equals("Y") && values[4].equals("Z"))) {
-            throw new Exception();
-          }
-        }
-        count++;
-      }
-    } catch (ArrayIndexOutOfBoundsException e) {
-      System.out.println("ERROR: Empty CSV file");
-    } catch (NumberFormatException e) {
-      System.out.println("ERROR: At line " + count + " invalid field type");
-    } catch (Exception e) {
-      System.out.println("ERROR: Invalid CSV header");
-    }
-    System.out.println("Read " + (count - 1) + " stars from " + fileName);
-  }
 
 
-  /**
-   * Prints a given amount of nearest neighbors
-   *
-   * @param kValue nonnegative, integral number of nearest neighbors to find
-   * @param xValue, yvalue, zValue represents the position from which to find the nearest neighbors
-   */
-  private void naiveNeighbors(int kValue, double xValue, double yValue, double zValue) {
-    int realKValue = Math.min(kValue, starIds.size());
-
-    List<Double> distances = calculateDistances(xValue, yValue, zValue);
-
-    sortDistances(distances, realKValue, true, "");
-  }
 
 
-  /**
-   * Prints a given amount of nearest neighbors
-   *
-   * @param kValue nonnegative, integral number of nearest neighbors to find
-   * @param name the name of a star from which to find the nearest neighbors
-   */
-  private void naiveNeighbors(int kValue, String name) throws Exception {
-
-    int realKValue = Math.min(kValue, starIds.size() - 1);
-
-    double xValue = 0.0;
-    double yValue = 0.0;
-    double zValue = 0.0;
-    boolean foundStar = false;
-
-    for (int i = 0; i < starNames.size(); i++) {
-      if (starNames.get(i).equals(name)) {
-        xValue = starXValues.get(i);
-        yValue = starYValues.get(i);
-
-        zValue = starZValues.get(i);
-        foundStar = true;
-      }
-    }
-    if (!foundStar) {
-      throw new NameNotFoundException();
-    }
-
-    List<Double> distances = calculateDistances(xValue, yValue, zValue);
-    sortDistances(distances, realKValue, false, name);
-
-  }
-
-  /**
-   * Calculates all stars distances from a given position
-   *
-   * @param fromX, fromY, fromZ position to calculate distances from
-   * @return a list of distances from given position
-   */
-  private List<Double> calculateDistances(double fromX, double fromY, double fromZ) {
-    List<Double> distances = new ArrayList<>();
-    for (int i = 0; i < starIds.size(); i++) {
-      distances.add(Math.sqrt(
-          Math.pow(fromX - starXValues.get(i), 2)
-              + Math.pow(fromY - starYValues.get(i), 2)
-              + Math.pow(fromZ - starZValues.get(i), 2)
-      ));
-    }
-    return distances;
-  }
-
-  /**
-   * Sorts all stars distances in ascending order
-   *
-   * @param distances - a list of distances from a given position
-   *        numNeighbors - the amount of neighbors to return
-   *        incudeName - whether to include the given star's id in list
-   *        name - name of star given
-   * @return a list of distances from given position
-   */
-  private void sortDistances(List<Double> distances, int numNeighbors, boolean includeName,
-                             String name) {
-
-    List<Integer> neighbors = new ArrayList<>();
-    List<Double> smallestDistance = new ArrayList<>();
-    for (int i = 0; i < numNeighbors; i++) {
-      smallestDistance.add((double) Integer.MAX_VALUE);
-    }
-    for (int i = 0; i < starNames.size(); i++) {
-      double distanceFrom = distances.get(i);
-      if (starNames.get(i).equals(name) && !includeName) {
-        continue;
-      } else {
-        for (int j = 0; j < numNeighbors; j++) {
-          if (distanceFrom < smallestDistance.get(j)) {
-            smallestDistance.add(j, distanceFrom);
-            neighbors.add(j, starIds.get(i));
-            break;
-          } else if (distanceFrom == (smallestDistance.get(j)) && j == numNeighbors - 1) {
-            int random = (int) Math.floor(Math.random() * 2);
-            if (random == 1) {
-              smallestDistance.add(j, distanceFrom);
-              neighbors.add(j, starIds.get(i));
-              break;
-            }
-          }
-
-        }
-
-
-      }
-    }
-    if (neighbors.isEmpty()) {
-      System.out.print("");
-    }
-    for (int i = 0; i < numNeighbors; i++) {
-      System.out.println(neighbors.get(i));
-    }
-
-  }
 
 }

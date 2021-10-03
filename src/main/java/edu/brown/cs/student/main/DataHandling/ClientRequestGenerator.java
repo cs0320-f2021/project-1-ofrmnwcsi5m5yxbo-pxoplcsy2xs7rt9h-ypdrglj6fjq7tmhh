@@ -1,10 +1,9 @@
-package DataHandling;
+package edu.brown.cs.student.main.DataHandling;
 
 //import edu.brown.cs.student.client.ClientAuth;
 
 import java.net.URI;
 import java.net.http.HttpRequest;
-import java.time.Duration;
 
 /**
  * This class generates the HttpRequests that are then used to make requests from the ApiClient.

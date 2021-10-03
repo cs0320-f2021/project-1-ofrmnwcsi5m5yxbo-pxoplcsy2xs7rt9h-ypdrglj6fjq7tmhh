@@ -1,4 +1,4 @@
-package DataHandling;
+package edu.brown.cs.student.main.DataHandling;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

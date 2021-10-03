@@ -1,4 +1,4 @@
-package DataHandling;
+package edu.brown.cs.student.main.DataHandling;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
