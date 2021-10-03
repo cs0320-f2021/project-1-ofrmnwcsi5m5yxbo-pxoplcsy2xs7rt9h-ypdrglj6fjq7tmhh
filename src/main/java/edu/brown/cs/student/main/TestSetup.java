@@ -37,9 +37,9 @@ public class TestSetup {
     */
 
     ArrayList<Comparator<Test3D>> dimensions = new ArrayList<>();
-    dimensions.add(new TestComparatorByAge());
-    dimensions.add(new TestComparatorByHeight());
     dimensions.add(new TestComparatorByWeight());
+    dimensions.add(new TestComparatorByHeight());
+    dimensions.add(new TestComparatorByAge());
 
     //SORT list of T values by first axis
 
@@ -75,14 +75,14 @@ public class TestSetup {
    * Example Comparators for first, second, and third dimensions to use with Test3D datatype
    * (USER datatype in Datatype package should be similar)
    */
-  public static class TestComparatorByAge implements Comparator<Test3D> {
-    TestComparatorByAge() {}
+  public static class TestComparatorByWeight implements Comparator<Test3D> {
+    TestComparatorByWeight() {}
     @Override
     public int compare(Test3D o1, Test3D o2) {
-      return Integer.compare(o1.getAge(), o2.getAge());
+      return Double.compare(o1.getWeight(), o2.getWeight());
     }
-
   }
+
 
   public static class TestComparatorByHeight implements Comparator<Test3D> {
     TestComparatorByHeight() {}
@@ -92,11 +92,14 @@ public class TestSetup {
     }
   }
 
-  public static class TestComparatorByWeight implements Comparator<Test3D> {
-    TestComparatorByWeight() {}
+  public static class TestComparatorByAge implements Comparator<Test3D> {
+    TestComparatorByAge() {}
     @Override
     public int compare(Test3D o1, Test3D o2) {
-      return Double.compare(o1.getWeight(), o2.getWeight());
+      return Integer.compare(o1.getAge(), o2.getAge());
     }
+
   }
+
+
 }

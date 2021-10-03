@@ -37,19 +37,21 @@ public class Test3D implements DataType, Coord<Test3D>, Comparable<Test3D> {
 
   @Override
   public double calcDistance(Test3D other) {
-    return Math.pow(other.getAge() - this.age, 2) + Math.pow(other.getHeight() - this.height, 2)
-        + Math.pow(other.getWeight() - this.weight, 2);
+    return Math.pow(other.getWeight() - this.weight, 2)
+        + Math.pow(other.getHeight() - this.height, 2)
+        + Math.pow(other.getAge() - this.age, 2);
   }
 
 
   @Override
   public double calcAxisDistance(int axis, Test3D other) {
     if(axis == 0) {
-      return Math.pow(other.getAge() - this.age, 2);
+      return Math.pow(other.getWeight() - this.weight, 2);
     }else if (axis == 1) {
       return Math.pow(other.getHeight() - this.height, 2);
     } else if (axis == 2) {
-      return Math.pow(other.getWeight() - this.weight, 2);
+
+      return Math.pow(other.getAge() - this.age, 2);
     } else {
       throw new IllegalArgumentException();
     }
@@ -62,7 +64,8 @@ public class Test3D implements DataType, Coord<Test3D>, Comparable<Test3D> {
 
   @Override
   public String coordString() {
-    return "(Age: " + this.age + ",Height: " + this.height + ",Weight: " + this.weight + ")";
+    return "(Weight: " + this.weight + ", Height: " + this.height
+        + ",Age: " + this.age + ")";
   }
 
   public String getGroup() {
