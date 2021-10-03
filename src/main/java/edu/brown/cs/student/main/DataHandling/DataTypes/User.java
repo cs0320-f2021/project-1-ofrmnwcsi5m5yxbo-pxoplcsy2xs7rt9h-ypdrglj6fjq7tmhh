@@ -4,7 +4,7 @@ import edu.brown.cs.student.main.Coord;
 
 import java.util.Objects;
 
-public class User implements DataType, Coord<User> {
+public class User implements DataType, Coord<User>, Comparable<User> {
   private final int user_id;
   private String weight;
   private String bust_size;
@@ -146,5 +146,10 @@ public class User implements DataType, Coord<User> {
   public String coordString() {
     return "(Weight: " + this.getRealWeight() + ", Height: " + this.getRealHeight()
         + ",Age: " + this.age + ")";
+  }
+
+  @Override
+  public int compareTo(User o) {
+    return 0;
   }
 }
