@@ -77,18 +77,23 @@ public class KDTree<T extends Comparable<T> & Coord<T>> {
         newNode.setParent(checkAgainst);
         numNodes++;
         newNode.setId(numNodes);
+        System.out.println("inserted a node");
+        return;
       }
 
-    } else if (dim.compare(root.getValue(), newNode.getValue()) <= 0 ) {
+    } else {
       if (checkAgainst.getRight() != null){
         this.addNode(checkAgainst.getRight(), newNode);
 
-      }else {checkAgainst.setRight(newNode);
+      }else {
+        checkAgainst.setRight(newNode);
         newNode.setDepth(checkAgainst.getDepth() + 1);
         newNode.setParent(checkAgainst);
         numNodes++;
-        newNode.setId(numNodes);}
-
+        newNode.setId(numNodes);
+        System.out.println("inserted a node");
+        return;
+      }
     }
   }
 
@@ -216,11 +221,13 @@ public class KDTree<T extends Comparable<T> & Coord<T>> {
   private void nextNode(int k, ArrayList<Node<T>> neighbors, Node<T> current, T target,
                         boolean exclude) {
 
-
+    if (neighbors.size() == 0) {
+      return;
+    }
     double distBestFarthest = neighbors.get(neighbors.size() - 1).getValue().calcDistance(target);
-    int dim = current.getDepth() % k;
+    int dim = current.getDepth() % this.k;
 
-    Comparator<T> dimCheck = this.dimsToCompare.get(current.getDepth() % k);
+    Comparator<T> dimCheck = this.dimsToCompare.get(current.getDepth() % this.k);
 
 
     if (distBestFarthest > current.getValue().calcAxisDistance(dim, target)) {

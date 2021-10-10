@@ -64,16 +64,16 @@ public class User implements DataType, Coord<User>, Comparable<User> {
    *
    */
   public double getRealWeight(){
-    double weight = 0.0;
     StringBuilder realWeight = new StringBuilder();
-    String[] weightArr = this.weight.split("");
+    String[] weightArr;
+    weightArr = this.weight.split("");
     int index = 0;
-    while (!weightArr[index].equals("l")) {
+    while (index < weightArr.length && !weightArr[index].equals("l")) {
       realWeight.append(weightArr[index]);
       index++;
     }
-    weight = Double.parseDouble(realWeight.toString());
-    return weight;
+    double w = Double.parseDouble(realWeight.toString());
+    return w;
   }
 
   public double getAge() {

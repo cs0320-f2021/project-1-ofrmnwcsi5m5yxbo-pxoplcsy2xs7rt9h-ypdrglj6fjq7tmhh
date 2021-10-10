@@ -1,7 +1,0 @@
-ARGS
-
-INPUT
-users data/bunnies/rabbits.json
-OUTPUT
-ERROR:
-END

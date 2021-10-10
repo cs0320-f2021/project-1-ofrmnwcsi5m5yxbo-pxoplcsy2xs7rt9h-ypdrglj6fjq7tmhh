@@ -81,255 +81,61 @@ public final class Main {
       // Variables to be instantiated in REPL below
       KDTree<User> kdTree = null;
       List<User> users = new ArrayList<>();
-      List<Rental> rentals = new ArrayList<>();
-      List<Review> reviews = new ArrayList<>();
+      ReplHandler rhandler = new ReplHandler();
 
       while ((input = br.readLine()) != null) {
         try {
           input = input.trim();
           String[] arguments = input.split(" ");
-
-          // [SECTION:] Load user data into KDTree using DataHandler
           if (arguments[0].equals("users")) {
-            // Setup List of Users
-            DataHandler dataHandler = new DataHandler();
-            // If using Api aggregator
-            if (arguments[1].equals("online")) {
-              DataType[] data = dataHandler.readFromAPI(arguments[0]);
-              try {
-                data = dataHandler.readFromAPI(arguments[0]);
-                if (data instanceof User[]) {
-                  User[] usersArray = (User[]) data;
-                  Collections.addAll(users, usersArray);
-//                  users = Arrays.asList(usersArray);
-                } else {
-                  throw new IOException();
-                }
-              } catch (Exception e) {
-                System.out.println("ERROR: Something went wrong with API aggregator");
-              }
+            users = rhandler.handleUsers(arguments);
+            Collections.sort(users, new SortByWeight());
+            int middle = (int) users.size() / 2;
+            Node<User> root = new Node(users.get(middle));
+            ArrayList<Comparator<User>> comps = new ArrayList<>();
+            comps.add(new SortByWeight());
+            comps.add(new SortByHeight());
+            comps.add(new SortByAge());
+            kdTree = new KDTree<>(3, root, comps);
+            users.remove(middle);
+            int inserted = 1;
+            for (User user : users) {
+              kdTree.addNode(root, new Node(user));
+              inserted++;
             }
-            // If reading straight from a .json file
-            else {
-              DataType[] data = dataHandler.readFromFile(arguments[1], arguments[0]);
-              try {
-                if (data instanceof User[]) {
-                  User[] usersArray = (User[]) data;
-                  Collections.addAll(users, usersArray);
-//                  users = Arrays.asList(usersArray);
-                } else {
-                  throw new IOException();
-                }
-              } catch (Exception e) {
-                System.out.println("ERROR: Could not read from input file");
-              }
-            }
-
-            // Setup List of dimensions for KDTree (weight, height, age)
-            List<Comparator<User>> dimensions = new ArrayList<>();
-            dimensions.add(new compareByWeight());
-            dimensions.add(new compareByHeight());
-            dimensions.add(new compareByAge());
-            // Sort users by first axis, age
-            users.sort(new compareByAge());
-            int median = (int) Math.floor(users.size() / 2.0); // get median for balanced KDTree
-            // Create KDTree
-            Node<User> root = new Node<>(users.get(median)); // Had to make User implement Comparator interface; that ok?
-            kdTree = new KDTree<>(3, root, dimensions);
-            // Add users before median to KDTree
-            for (User user: users.subList(0, median)) {
-              kdTree.addNode(root, new Node<>(user));
-            }
-            // Add users after median to KDTree
-            for (User user: users.subList(median + 1, users.size())) {
-              kdTree.addNode(root, new Node<>(user));
-            }
-            // KDTree should be set up now; let user know this is done
-            System.out.println("Loaded " + users.size() + " users from " + arguments[1]);
+            System.out.println("Read " + inserted  + " users from " + arguments[1]);
           }
-          // [SECTION]: Get reviews/rentals information from api-aggregator/.json files
-          else if (arguments[0].equals("reviews") || arguments[0].equals("rent")) {
-            DataHandler dataHandler = new DataHandler();
-            // If using api aggregator
-            if (arguments[1].equals("online")) {
-              DataType[] data = dataHandler.readFromAPI(arguments[0]);
-              try {
-                data = dataHandler.readFromAPI(arguments[0]);
-                // Check if the datatype is Review
-                if (data instanceof Review[]) {
-                  Review[] reviewsArray = (Review[]) data;
-                  reviews = Arrays.asList(reviewsArray);
-                }
-                // Check if the datatype is Rental
-                else if (data instanceof Rental[]) {
-                  Rental[] rentalsArray = (Rental[]) data;
-                  rentals = Arrays.asList(rentalsArray);
-                }
-                else {
-                  throw new IOException();
-                }
-              } catch (Exception e) {
-                System.out.println("ERROR: Something went wrong with API aggregator");
-              }
-            }
-            // If reading from .json files directly
-            else {
-              DataType[] data = dataHandler.readFromFile(arguments[1], arguments[0]);
-              try {
-                // Check if the datatype is Review
-                if (data instanceof Review[]) {
-                  Review[] reviewsArray = (Review[]) data;
-                  reviews = Arrays.asList(reviewsArray);
-                }
-                // Check if the datatype is Rental
-                else if (data instanceof Rental[]) {
-                  Rental[] rentalsArray = (Rental[]) data;
-                  rentals = Arrays.asList(rentalsArray);
-                }
-                else {
-                  throw new IOException();
-                }
-              } catch (Exception e) {
-                System.out.println("ERROR: Could not read from input file");
-              }
-            }
-          }
-          // [SECTION]: Execute similar methods from KDTree
-          else if (arguments[0].equals("similar")){
+          else if (arguments[0].equals("similar")) {
+            User target = null;
             if (arguments.length == 3) {
-              //similar <k> <some_user_id>
-              //FIND object with same id as <some_user_id> to use as TARGET
-              User targetUser = null;
-              try {
-                int inputtedUser = Integer.parseInt(arguments[1]);
-                for (User user : users) {
-                  if (user.getUser_id() == inputtedUser) {
-                    targetUser = user;
-                    break;
-                  }
+              for (User user : users) {
+                if (user.getUser_id() == Integer.parseInt(arguments[2])) {
+                  target = user;
                 }
-                // Check that user was found
-                if (targetUser == null) {
-                  throw new IllegalArgumentException();
-                }
-              } catch (Exception e) {
-                System.out.println("ERROR: User ID not found");
-              }
-
-              try {
-                //CALL 'similar' method from KDTree object with <k> <TARGET> <exclude == TRUE>
-                List<Integer> similarUsers = kdTree.similar(Integer.parseInt(arguments[1]), targetUser, true);
-                //PRINT ids from List returned
-                for (int id : similarUsers) {
-                  System.out.println(id);
-                }
-              } catch (Exception e) {
-                System.out.println("ERROR: KDTree was not initialized");
-              }
-
-            } else if ((arguments.length == 5)){
-              //similar <k> <weight in lbs> <height in inches> <age in years>
-
-              // CREATE object with same values as <weight in lbs> <height in inches> <age in years>
-              User targetUser = null;
-              try {
-                int heightInInches = Integer.parseInt(arguments[3]);
-                String heightInFeet = (heightInInches / 12) + "' " + (heightInInches % 12);
-                // Get age of input as double
-                double age = Double.parseDouble(arguments[4]);
-                // Create User object to be the target for similar();
-                // Set other attributes as empty strings
-                targetUser = new User(-1, arguments[2], "", heightInFeet, age, "", "");
-              } catch (Exception e) {
-                System.out.println("ERROR: Couldn't create User object from inputs");
-              }
-
-              // CALL 'similar' method from KDTree object with <k> <TARGET> <exclude == FALSE>
-              try {
-                // CALL 'similar' method from KDTree object with <k> <TARGET> <exclude == TRUE>
-                List<Integer> similarUsers = kdTree.similar(Integer.parseInt(arguments[1]), targetUser, false);
-                // PRINT ids from List returned
-                for (int id : similarUsers) {
-                  System.out.println(id);
-                }
-              } catch (Exception e) {
-                System.out.println("ERROR: KDTree was not initialized");
               }
             }
+            System.out.println(rhandler.handleSimilar(arguments, kdTree, target));
           }
-          // [SECTION:] Execute classify methods from KDTree
           else if (arguments[0].equals("classify")) {
+            String[] starSigns =
+                    {"Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
+                            "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"};
+            ArrayList<String> starSignsList = new ArrayList<>(Arrays.asList(starSigns));
+            User target = null;
             if (arguments.length == 3) {
-              //classify <k> <some_user_id>
-
-              //FIND object with same id as <some_user_id> to use as TARGET
-              User targetUser = null;
-              try {
-                int inputtedUser = Integer.parseInt(arguments[1]);
-                for (User user : users) {
-                  if (user.getUser_id() == inputtedUser) {
-                    targetUser = user;
-                    break;
-                  }
+              for (User user : users) {
+                if (user.getUser_id() == Integer.parseInt(arguments[2])) {
+                  target = user;
                 }
-                // Check that user was found
-                if (targetUser == null) {
-                  throw new IllegalArgumentException();
-                }
-              } catch (Exception e) {
-                System.out.println("ERROR: User ID not found");
-              }
-
-              //Collect all possible groups i.e. all horoscopes. should be 12 types total
-              List<String> horoscopes = Arrays.asList("Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
-                  "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces");
-              try {
-                //CALL 'classify' method from KDTree object with <k> <TARGET> <exclude == TRUE> <groups>
-                Map<String, Integer> mappedUsers = kdTree.classify(Integer.parseInt(arguments[1]),
-                    targetUser, true, horoscopes);
-
-                //PRINT each key value pair from Map returned
-                mappedUsers.forEach((horoscope, numUsers) -> System.out.println(horoscope + ": " + numUsers));
-              } catch (Exception e) {
-                System.out.println("ERROR: KDTree was not initialized");
-              }
-            } else if ((arguments.length == 5)){
-              //classify <k> <weight in lbs> <height in inches> <age in years>
-              //CREATE object with same attribute values as <weight in lbs> <height in inches> <age in years>
-              //all other attributes can be random
-              //will be used as TARGET
-              User targetUser = null;
-              try {
-                int heightInInches = Integer.parseInt(arguments[3]);
-                String heightInFeet = (heightInInches / 12) + "' " + (heightInInches % 12);
-                // Get age of input as double
-                double age = Double.parseDouble(arguments[4]);
-                // Create User object to be the target for similar();
-                // Set other attributes as empty strings
-                targetUser = new User(-1, arguments[2], "", heightInFeet, age, "", "");
-              } catch (Exception e) {
-                System.out.println("ERROR: Couldn't create User object from inputs");
-              }
-              //Collect all possible groups i.e. all horoscopes
-              List<String> horoscopes = Arrays.asList("Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
-                  "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces");
-              try {
-                //CALL 'classify' method from KDTree object with <k> <TARGET> <exclude == TRUE> <groups>
-                Map<String, Integer> mappedUsers = kdTree.classify(Integer.parseInt(arguments[1]),
-                    targetUser, true, horoscopes);
-
-                //PRINT each key value pair from Map returned
-                mappedUsers.forEach((horoscope, numUsers) -> System.out.println(horoscope + ": " + numUsers));
-              } catch (Exception e) {
-                System.out.println("ERROR: KDTree was not initialized");
               }
             }
+            System.out.println(rhandler.handleClassify(arguments, kdTree, target, starSignsList));
           }
           else {
             throw new IllegalArgumentException();
           }
         } catch (IllegalArgumentException e) {
-          System.out.println("ERROR: Invalid input for REPL");
+          System.out.println("Error: Invalid input for REPL");
         }
       }
     } catch (Exception e) {

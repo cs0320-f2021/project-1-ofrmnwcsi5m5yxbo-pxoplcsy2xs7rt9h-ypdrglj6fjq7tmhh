@@ -14,7 +14,10 @@ public class ClientAuth {
    * @return a String of the api key.
    */
   public static String getKey() {
+    return "?auth=jdai15&key=04cp225";
+    /*
     FileParser parser = new FileParser("config/secret/apikey.txt");
     return parser.readNewLine();
+     */
   }
 }

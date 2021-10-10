@@ -19,6 +19,7 @@ public class ClientRequestGenerator {
   public static HttpRequest getSecuredGetRequest(String reqUri) {
     String key = ClientAuth.getKey();;
     reqUri = reqUri + key;
+    System.out.println(reqUri);
     HttpRequest request = HttpRequest.newBuilder()
         .uri(URI.create(reqUri))
         .build();
