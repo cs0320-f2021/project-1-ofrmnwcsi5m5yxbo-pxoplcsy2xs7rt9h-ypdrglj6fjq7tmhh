@@ -29,7 +29,7 @@ public class ReplHandler {
                 ret.add((User) result);
             }
             else {
-                throw new IllegalArgumentException("return value was not of type User");
+                throw new IllegalArgumentException("Return value was not of type User");
             }
         }
         return ret;
