@@ -73,6 +73,10 @@ public final class Main {
     replCommands.put("similar", new SimilarProcess((UserProcess) replCommands.get("users")));
     replCommands.put("classify", new ClassifyProcess((UserProcess) replCommands.get("users")));
     replCommands.put("recsys_load", new Recsys_LoadProcess());
+    /*
+     I imagine for any of the rec/grouping commands you would have to pass this recsys_load object
+     to the constructor of the process (using replCommands.get("recsys_load"))
+    */
     // TODO: Add your REPL here!
     try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
       String input;
