@@ -17,11 +17,6 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
-import edu.brown.cs.student.main.DataHandling.DataHandler;
-import edu.brown.cs.student.main.DataHandling.DataTypes.DataType;
-import edu.brown.cs.student.main.DataHandling.DataTypes.Rental;
-import edu.brown.cs.student.main.DataHandling.DataTypes.Review;
-import edu.brown.cs.student.main.DataHandling.DataTypes.Test3D;
 import edu.brown.cs.student.main.DataHandling.DataTypes.User;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
@@ -82,54 +77,18 @@ public final class Main {
       KDTree<User> kdTree = null;
       List<User> users = new ArrayList<>();
       ReplHandler rhandler = new ReplHandler();
-
+      HashMap<String, ReplRunnable> replCommands = new HashMap<>();
+      //add desired replCommands here.
+      replCommands.put("users", new UserProcess());
+      replCommands.put("similar", new SimilarProcess((UserProcess) replCommands.get("users")));
+      replCommands.put("classify", new ClassifyProcess((UserProcess) replCommands.get("users")));
+      replCommands.put("recsys_load", new Recsys_LoadProcess());
       while ((input = br.readLine()) != null) {
         try {
           input = input.trim();
           String[] arguments = input.split(" ");
-          if (arguments[0].equals("users")) {
-            users = rhandler.handleUsers(arguments);
-            Collections.sort(users, new SortByWeight());
-            int middle = (int) users.size() / 2;
-            Node<User> root = new Node(users.get(middle));
-            ArrayList<Comparator<User>> comps = new ArrayList<>();
-            comps.add(new SortByWeight());
-            comps.add(new SortByHeight());
-            comps.add(new SortByAge());
-            kdTree = new KDTree<>(3, root, comps);
-            users.remove(middle);
-            int inserted = 1;
-            for (User user : users) {
-              kdTree.addNode(root, new Node(user));
-              inserted++;
-            }
-            System.out.println("Read " + inserted  + " users from " + arguments[1]);
-          }
-          else if (arguments[0].equals("similar")) {
-            User target = null;
-            if (arguments.length == 3) {
-              for (User user : users) {
-                if (user.getUser_id() == Integer.parseInt(arguments[2])) {
-                  target = user;
-                }
-              }
-            }
-            System.out.println(rhandler.handleSimilar(arguments, kdTree, target));
-          }
-          else if (arguments[0].equals("classify")) {
-            String[] starSigns =
-                    {"Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
-                            "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"};
-            ArrayList<String> starSignsList = new ArrayList<>(Arrays.asList(starSigns));
-            User target = null;
-            if (arguments.length == 3) {
-              for (User user : users) {
-                if (user.getUser_id() == Integer.parseInt(arguments[2])) {
-                  target = user;
-                }
-              }
-            }
-            System.out.println(rhandler.handleClassify(arguments, kdTree, target, starSignsList));
+          if (replCommands.containsKey(arguments[0])) {
+            replCommands.get(arguments[0]).runCommand(arguments);
           }
           else {
             throw new IllegalArgumentException();
@@ -209,7 +168,6 @@ public final class Main {
       // this is a map of variables that are used in the FreeMarker template
       Map<String, Object> variables = ImmutableMap.of("title",
           "Go go GUI");
-
       return new ModelAndView(variables, "main.ftl");
     }
   }

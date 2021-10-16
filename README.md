@@ -12,7 +12,7 @@ API Endpoints:
 
   endpoint one: fairly fast, but often fails due to "malicious error"
   
-  endpint two: slower than endpoint one but still fairly fast. Fails more than endpoint one.
+  endpoint two: slower than endpoint one but still fairly fast. Fails more than endpoint one.
   
   endpoint three: about as fast as endpoint one, errors less than endpoint one, but often has different/incomplete users
   
