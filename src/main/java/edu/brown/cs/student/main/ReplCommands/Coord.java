@@ -1,4 +1,4 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.ReplCommands;
 
 /**
  * An interface for Coordinate to be used in KDTree

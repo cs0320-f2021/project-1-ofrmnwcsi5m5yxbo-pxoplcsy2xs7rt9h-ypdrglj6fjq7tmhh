@@ -1,6 +1,8 @@
 package edu.brown.cs.student.main;
 
 import edu.brown.cs.student.main.DataHandling.DataTypes.Test3D;
+import edu.brown.cs.student.main.ReplCommands.KDTree;
+import edu.brown.cs.student.main.ReplCommands.Node;
 
 import java.util.ArrayList;
 import java.util.Comparator;

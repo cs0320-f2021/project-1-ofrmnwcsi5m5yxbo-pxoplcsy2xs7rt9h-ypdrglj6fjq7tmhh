@@ -1,12 +1,15 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.ReplCommands.CommandRunnables;
 
+import edu.brown.cs.student.main.DataHandling.ApiAggregator;
+import edu.brown.cs.student.main.DataHandling.DataTypes.DataType;
 import edu.brown.cs.student.main.DataHandling.DataTypes.Student;
 import edu.brown.cs.student.main.DataHandling.DataTypes.StudentFromAPI;
 import edu.brown.cs.student.main.DataHandling.DataTypes.StudentFromSQL;
+import edu.brown.cs.student.main.ReplCommands.SortByIdAPI;
+import edu.brown.cs.student.main.ReplCommands.SortByIdSQL;
 import edu.brown.cs.student.main.orm.Database;
 
 import java.lang.reflect.InvocationTargetException;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -16,6 +19,7 @@ public class Recsys_LoadProcess implements ReplRunnable {
     private HashMap<Integer, StudentFromAPI> studentAPIHashMap;
     private HashMap<Integer, Student> studentHashMap;
     private Database db = new Database("data/integration.sqlite3");
+    private ApiAggregator ag = new ApiAggregator();
 
     public Recsys_LoadProcess() throws SQLException, ClassNotFoundException {
         studentSQLHashMap = new HashMap<>();
@@ -25,18 +29,9 @@ public class Recsys_LoadProcess implements ReplRunnable {
 
     public void runCommand(String[] arguments) throws SQLException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
         List<StudentFromSQL> sqlstud = getFromSQL();
-        StudentFromSQL test = sqlstud.get(10);
-        System.out.println(test.getId());
-        System.out.println(test.getInterests());
-        System.out.println(test.getPositiveTraits());
-        System.out.println(test.getNegativeTraits());
-        System.out.println(test.getCommentingSkill());
-        System.out.println(test.getTestingSkill());
-        System.out.println(test.getOopSkill());
-        System.out.println(test.getAlgorithmSkill());
-        System.out.println(test.getTeamworkSkill());
-        System.out.println(test.getFrontendSkill());
-
+        List<StudentFromAPI> apistud = getFromAPI();
+        studentList = aggregateStudents(sqlstud, apistud);
+        System.out.println("Loaded recsys_load with " + studentList.size() + " students.");
     }
 
     private List<StudentFromSQL> getFromSQL() throws SQLException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
@@ -103,14 +98,37 @@ public class Recsys_LoadProcess implements ReplRunnable {
         }
         return new ArrayList<>(studentSQLHashMap.values());
     }
-    /*
+
     private List<StudentFromAPI> getFromAPI() {
-
+        DataType[] results = ag.aggregateResults("integration");
+        ArrayList<StudentFromAPI> ret = new ArrayList<>();
+        for (DataType result : results) {
+            if (result.getClass() == StudentFromAPI.class){
+                ret.add((StudentFromAPI) result);
+            }
+            else {
+                throw new IllegalArgumentException("Return value was not of type StudentFromAPI");
+            }
+        }
+        return ret;
     }
-
-    private List<Student> aggregateStudents() {
-
+    private List<Student> aggregateStudents(List<StudentFromSQL> sqlstud, List<StudentFromAPI> apistud) {
+        sqlstud.sort(new SortByIdSQL());
+        apistud.sort(new SortByIdAPI());
+        ArrayList<Student> studs = new ArrayList<>();
+        if (sqlstud.size() != apistud.size()) {
+            throw new IllegalArgumentException("sql and api have different numbers of students");
+        }
+        for (int i = 0; i < sqlstud.size(); i++) {
+            StudentFromSQL sql = sqlstud.get(i);
+            StudentFromAPI api = apistud.get(i);
+            Student stud = new Student(sql, api);
+            studs.add(stud);
+        }
+        return studs;
     }
-    */
+    public List<Student> getStudentList() {
+        return studentList;
+    }
 }
 

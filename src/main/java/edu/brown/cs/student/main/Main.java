@@ -6,10 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.sql.Array;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +16,8 @@ import java.util.Map;
 import com.google.common.collect.ImmutableMap;
 
 import edu.brown.cs.student.main.DataHandling.DataTypes.User;
+import edu.brown.cs.student.main.ReplCommands.*;
+import edu.brown.cs.student.main.ReplCommands.CommandRunnables.*;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -28,8 +28,6 @@ import spark.Response;
 import spark.Spark;
 import spark.TemplateViewRoute;
 import spark.template.freemarker.FreeMarkerEngine;
-
-import javax.xml.crypto.Data;
 
 /**
  * The Main class of our project. This is where execution begins.
@@ -44,7 +42,7 @@ public final class Main {
    *
    * @param args An array of command line arguments
    */
-  public static void main(String[] args) {
+  public static void main(String[] args) throws SQLException, ClassNotFoundException {
     new Main(args).run();
   }
 
@@ -54,7 +52,7 @@ public final class Main {
     this.args = args;
   }
 
-  private void run() {
+  private void run() throws SQLException, ClassNotFoundException {
     // set up parsing of command line flags
     OptionParser parser = new OptionParser();
 
@@ -69,20 +67,16 @@ public final class Main {
     if (options.has("gui")) {
       runSparkServer((int) options.valueOf("port"));
     }
-
+    HashMap<String, ReplRunnable> replCommands = new HashMap<>();
+    //add desired replCommands here.
+    replCommands.put("users", new UserProcess());
+    replCommands.put("similar", new SimilarProcess((UserProcess) replCommands.get("users")));
+    replCommands.put("classify", new ClassifyProcess((UserProcess) replCommands.get("users")));
+    replCommands.put("recsys_load", new Recsys_LoadProcess());
     // TODO: Add your REPL here!
     try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
       String input;
       // Variables to be instantiated in REPL below
-      KDTree<User> kdTree = null;
-      List<User> users = new ArrayList<>();
-      ReplHandler rhandler = new ReplHandler();
-      HashMap<String, ReplRunnable> replCommands = new HashMap<>();
-      //add desired replCommands here.
-      replCommands.put("users", new UserProcess());
-      replCommands.put("similar", new SimilarProcess((UserProcess) replCommands.get("users")));
-      replCommands.put("classify", new ClassifyProcess((UserProcess) replCommands.get("users")));
-      replCommands.put("recsys_load", new Recsys_LoadProcess());
       while ((input = br.readLine()) != null) {
         try {
           input = input.trim();

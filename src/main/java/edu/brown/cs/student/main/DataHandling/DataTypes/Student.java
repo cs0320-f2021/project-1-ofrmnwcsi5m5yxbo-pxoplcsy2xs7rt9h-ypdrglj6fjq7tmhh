@@ -13,19 +13,44 @@ public class Student implements DataType {
     private int algorithmSkill;
     private int teamworkSkill;
     private int frontendSkill;
-    private int ormComfort;
-    private int apiComfort;
-    private int kdtreeComfort;
-    private int bloomfilterComfort;
-    private String howOften;
-    private String whatMedium;
-    private String whatTime;
-    private String workloadDistribution;
-    private String whichTrack;
-    private String genderIdentity;
-    private boolean matchGender;
-    private String erIdentity;
-    private boolean matcher;
+    private String name;
+    private String meeting;
+    private String grade;
+    private double years_of_experience;
+    private String horoscope;
+    private String meeting_times;
+    private String preferred_language;
+    private String marginalized_groups;
+    private String prefer_group;
+
+    public Student(StudentFromSQL sql, StudentFromAPI api) {
+        if (sql.getId() != api.getId()) {
+            throw new IllegalArgumentException("sql and api students have different ids");
+        }
+        this.id = sql.getId();
+        this.interests = sql.getInterests();
+        this.positiveTraits = sql.getPositiveTraits();
+        this.negativeTraits = sql.getNegativeTraits();
+        this.commentingSkill = sql.getCommentingSkill();
+        this.testingSkill = sql.getTestingSkill();
+        this.oopSkill = sql.getOopSkill();
+        this.algorithmSkill = sql.getAlgorithmSkill();
+        this.teamworkSkill = sql.getTeamworkSkill();
+        this.frontendSkill = sql.getFrontendSkill();
+        this.name = api.getName();
+        this.meeting = api.getMeeting();
+        this.grade = api.getGrade();
+        this.years_of_experience = api.getYears_of_experience();
+        this.horoscope = api.getHoroscope();
+        this.meeting_times = api.getMeeting_times();
+        this.preferred_language = api.getPreferred_language();
+        this.marginalized_groups = api.getMarginalized_groups();
+        this.prefer_group = api.getPrefer_group();
+    }
+
+    public int getId() {
+        return id;
+    }
 
     public Set<String> getInterests() {
         return interests;
@@ -37,58 +62,6 @@ public class Student implements DataType {
 
     public Set<String> getNegativeTraits() {
         return negativeTraits;
-    }
-
-    public int getOrmComfort() {
-        return ormComfort;
-    }
-
-    public int getApiComfort() {
-        return apiComfort;
-    }
-
-    public int getKdtreeComfort() {
-        return kdtreeComfort;
-    }
-
-    public int getBloomfilterComfort() {
-        return bloomfilterComfort;
-    }
-
-    public String getHowOften() {
-        return howOften;
-    }
-
-    public String getWhatMedium() {
-        return whatMedium;
-    }
-
-    public String getWhatTime() {
-        return whatTime;
-    }
-
-    public String getWorkloadDistribution() {
-        return workloadDistribution;
-    }
-
-    public String getWhichTrack() {
-        return whichTrack;
-    }
-
-    public String getGenderIdentity() {
-        return genderIdentity;
-    }
-
-    public boolean isMatchGender() {
-        return matchGender;
-    }
-
-    public String getErIdentity() {
-        return erIdentity;
-    }
-
-    public boolean isMatcher() {
-        return matcher;
     }
 
     public int getCommentingSkill() {
@@ -115,40 +88,39 @@ public class Student implements DataType {
         return frontendSkill;
     }
 
-    public int getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public String getMeeting() {
+        return meeting;
     }
 
-    public Student(int id, Set<String> interests, Set<String> positiveTraits, Set<String> negativeTraits, int commentingSkill,
-                   int testingSkill, int oopSkill, int algorithmSkill, int teamworkSkill, int frontendSkill, int ormComfort, int apiComfort, int kdtreeComfort,
-                   int bloomfilterComfort, String howOften, String whatMedium, String whatTime, String workloadDistribution, String whichTrack,
-                   String genderIdentity, boolean matchGender, String erIdentity, boolean matcher) {
-        this.id = id;
-        this.interests = interests;
-        this.positiveTraits = positiveTraits;
-        this.negativeTraits = negativeTraits;
-        this.commentingSkill = commentingSkill;
-        this.testingSkill = testingSkill;
-        this.oopSkill = oopSkill ;
-        this.algorithmSkill = algorithmSkill;
-        this.teamworkSkill = teamworkSkill;
-        this.frontendSkill = frontendSkill;
-        this.ormComfort = ormComfort;
-        this.apiComfort = apiComfort;
-        this.kdtreeComfort = kdtreeComfort;
-        this.bloomfilterComfort = bloomfilterComfort;
-        this.howOften = howOften;
-        this.whatMedium = whatMedium;
-        this.whatTime = whatTime;
-        this.workloadDistribution = workloadDistribution;
-        this.whichTrack = whichTrack;
-        this.genderIdentity = genderIdentity;
-        this.matchGender = matchGender;
-        this.erIdentity = erIdentity;
-        this.matcher = matcher;
+    public String getGrade() {
+        return grade;
+    }
+
+    public double getYears_of_experience() {
+        return years_of_experience;
+    }
+
+    public String getHoroscope() {
+        return horoscope;
+    }
+
+    public String getMeeting_times() {
+        return meeting_times;
+    }
+
+    public String getPreferred_language() {
+        return preferred_language;
+    }
+
+    public String getMarginalized_groups() {
+        return marginalized_groups;
+    }
+
+    public String getPrefer_group() {
+        return prefer_group;
     }
 }

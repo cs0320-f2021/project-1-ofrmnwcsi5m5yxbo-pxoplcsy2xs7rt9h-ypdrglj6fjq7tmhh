@@ -1,6 +1,7 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.ReplCommands.CommandRunnables;
 
 import edu.brown.cs.student.main.DataHandling.DataTypes.User;
+import edu.brown.cs.student.main.ReplCommands.ReplHandler;
 
 public class SimilarProcess implements ReplRunnable {
     UserProcess uprocess;

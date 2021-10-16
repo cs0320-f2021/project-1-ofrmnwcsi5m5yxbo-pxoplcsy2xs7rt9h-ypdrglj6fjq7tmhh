@@ -1,7 +1,7 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.ReplCommands.CommandRunnables;
 
-import edu.brown.cs.student.main.*;
 import edu.brown.cs.student.main.DataHandling.DataTypes.User;
+import edu.brown.cs.student.main.ReplCommands.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
