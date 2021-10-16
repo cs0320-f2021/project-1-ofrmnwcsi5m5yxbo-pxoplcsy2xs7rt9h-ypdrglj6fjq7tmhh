@@ -1,4 +1,4 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.ReplCommands;
 
 /**
  * A Node class for use in a KDTree.

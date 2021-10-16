@@ -206,7 +206,7 @@ public class Database {
       }
     }
 
-    String sql = "SELECT * FROM " + tableName + " WHERE " + wheres + ";";
+    String sql = "SELECT * FROM " + tableName;// + " WHERE " + wheres + ";";
     System.out.println(sql);
     return sqlListQuery(c, sql, params);
   }
@@ -228,7 +228,7 @@ public class Database {
         int column = res.findColumn(fieldName);
         mapper.put(fieldName, res.getString(column));
       }
-      T node = (T) (c.getDeclaredConstructor(Map.class).newInstance(mapper));
+      T node = c.getDeclaredConstructor(Map.class).newInstance(mapper);
       output.add(node);
     }
     System.out.println(output.size());

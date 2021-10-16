@@ -6,10 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.sql.Array;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -17,12 +15,9 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
-import edu.brown.cs.student.main.DataHandling.DataHandler;
-import edu.brown.cs.student.main.DataHandling.DataTypes.DataType;
-import edu.brown.cs.student.main.DataHandling.DataTypes.Rental;
-import edu.brown.cs.student.main.DataHandling.DataTypes.Review;
-import edu.brown.cs.student.main.DataHandling.DataTypes.Test3D;
 import edu.brown.cs.student.main.DataHandling.DataTypes.User;
+import edu.brown.cs.student.main.ReplCommands.*;
+import edu.brown.cs.student.main.ReplCommands.CommandRunnables.*;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -33,8 +28,6 @@ import spark.Response;
 import spark.Spark;
 import spark.TemplateViewRoute;
 import spark.template.freemarker.FreeMarkerEngine;
-
-import javax.xml.crypto.Data;
 
 /**
  * The Main class of our project. This is where execution begins.
@@ -49,7 +42,7 @@ public final class Main {
    *
    * @param args An array of command line arguments
    */
-  public static void main(String[] args) {
+  public static void main(String[] args) throws SQLException, ClassNotFoundException {
     new Main(args).run();
   }
 
@@ -59,7 +52,7 @@ public final class Main {
     this.args = args;
   }
 
-  private void run() {
+  private void run() throws SQLException, ClassNotFoundException {
     // set up parsing of command line flags
     OptionParser parser = new OptionParser();
 
@@ -74,62 +67,22 @@ public final class Main {
     if (options.has("gui")) {
       runSparkServer((int) options.valueOf("port"));
     }
-
+    HashMap<String, ReplRunnable> replCommands = new HashMap<>();
+    //add desired replCommands here.
+    replCommands.put("users", new UserProcess());
+    replCommands.put("similar", new SimilarProcess((UserProcess) replCommands.get("users")));
+    replCommands.put("classify", new ClassifyProcess((UserProcess) replCommands.get("users")));
+    replCommands.put("recsys_load", new Recsys_LoadProcess());
     // TODO: Add your REPL here!
     try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
       String input;
       // Variables to be instantiated in REPL below
-      KDTree<User> kdTree = null;
-      List<User> users = new ArrayList<>();
-      ReplHandler rhandler = new ReplHandler();
-
       while ((input = br.readLine()) != null) {
         try {
           input = input.trim();
           String[] arguments = input.split(" ");
-          if (arguments[0].equals("users")) {
-            users = rhandler.handleUsers(arguments);
-            Collections.sort(users, new SortByWeight());
-            int middle = (int) users.size() / 2;
-            Node<User> root = new Node(users.get(middle));
-            ArrayList<Comparator<User>> comps = new ArrayList<>();
-            comps.add(new SortByWeight());
-            comps.add(new SortByHeight());
-            comps.add(new SortByAge());
-            kdTree = new KDTree<>(3, root, comps);
-            users.remove(middle);
-            int inserted = 1;
-            for (User user : users) {
-              kdTree.addNode(root, new Node(user));
-              inserted++;
-            }
-            System.out.println("Read " + inserted  + " users from " + arguments[1]);
-          }
-          else if (arguments[0].equals("similar")) {
-            User target = null;
-            if (arguments.length == 3) {
-              for (User user : users) {
-                if (user.getUser_id() == Integer.parseInt(arguments[2])) {
-                  target = user;
-                }
-              }
-            }
-            System.out.println(rhandler.handleSimilar(arguments, kdTree, target));
-          }
-          else if (arguments[0].equals("classify")) {
-            String[] starSigns =
-                    {"Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
-                            "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"};
-            ArrayList<String> starSignsList = new ArrayList<>(Arrays.asList(starSigns));
-            User target = null;
-            if (arguments.length == 3) {
-              for (User user : users) {
-                if (user.getUser_id() == Integer.parseInt(arguments[2])) {
-                  target = user;
-                }
-              }
-            }
-            System.out.println(rhandler.handleClassify(arguments, kdTree, target, starSignsList));
+          if (replCommands.containsKey(arguments[0])) {
+            replCommands.get(arguments[0]).runCommand(arguments);
           }
           else {
             throw new IllegalArgumentException();
@@ -209,7 +162,6 @@ public final class Main {
       // this is a map of variables that are used in the FreeMarker template
       Map<String, Object> variables = ImmutableMap.of("title",
           "Go go GUI");
-
       return new ModelAndView(variables, "main.ftl");
     }
   }

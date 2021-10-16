@@ -26,4 +26,14 @@ public class ClientRequestGenerator {
     // Hint: .header("x-api-key", apiKey)
     return request;
   }
+
+  public static HttpRequest getSecuredPostRequest(String reqUri) {
+    String apiKey = ClientAuth.getAPIKey();
+    HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create(reqUri))
+            .header("x-api-key", apiKey)
+            .POST(HttpRequest.BodyPublishers.ofString("{\"auth\":\"" + "jdai15" + "\"}"))
+            .build();
+    return request;
+  }
 }

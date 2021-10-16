@@ -1,12 +1,12 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.ReplCommands;
 
 import edu.brown.cs.student.main.DataHandling.DataTypes.User;
 
 import java.util.Comparator;
 
-public class SortByAge implements Comparator<User> {
+public class SortByWeight implements Comparator<User> {
     public int compare(User a, User b) {
-        if (a.getAge() < b.getAge()) {
+        if (a.getRealWeight() < b.getRealWeight()) {
             return -1;
         }
         else {

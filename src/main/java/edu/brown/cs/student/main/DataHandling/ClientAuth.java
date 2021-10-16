@@ -20,4 +20,8 @@ public class ClientAuth {
     return parser.readNewLine();
      */
   }
+  public static String getAPIKey(){
+    FileParser parse = new FileParser("config/secret/apikey.txt");
+    return parse.readNewLine();
+  }
 }

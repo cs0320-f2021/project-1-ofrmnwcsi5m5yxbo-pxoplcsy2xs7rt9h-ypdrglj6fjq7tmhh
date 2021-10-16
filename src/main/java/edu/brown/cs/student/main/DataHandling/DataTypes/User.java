@@ -1,6 +1,6 @@
 package edu.brown.cs.student.main.DataHandling.DataTypes;
 
-import edu.brown.cs.student.main.Coord;
+import edu.brown.cs.student.main.ReplCommands.Coord;
 
 import java.util.Objects;
 

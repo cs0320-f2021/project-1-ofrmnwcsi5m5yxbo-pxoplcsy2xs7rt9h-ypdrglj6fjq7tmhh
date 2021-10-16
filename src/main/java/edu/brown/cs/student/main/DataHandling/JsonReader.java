@@ -1,9 +1,6 @@
 package edu.brown.cs.student.main.DataHandling;
 
-import edu.brown.cs.student.main.DataHandling.DataTypes.DataType;
-import edu.brown.cs.student.main.DataHandling.DataTypes.Rental;
-import edu.brown.cs.student.main.DataHandling.DataTypes.Review;
-import edu.brown.cs.student.main.DataHandling.DataTypes.User;
+import edu.brown.cs.student.main.DataHandling.DataTypes.*;
 import com.google.gson.Gson;
 
 public class JsonReader {
@@ -25,6 +22,11 @@ public class JsonReader {
     return read;
   }
 
+  private StudentFromAPI[] readStudentFromAPI(String json) {
+    StudentFromAPI[] read = gson.fromJson(json, StudentFromAPI[].class);
+    return read;
+  }
+
   public DataType[] readData(String json, String type) {
     switch (type) {
       case "users":
@@ -33,6 +35,8 @@ public class JsonReader {
         return readReview(json);
       case "rent":
         return readRental(json);
+      case "integration":
+        return readStudentFromAPI(json);
       default:
         return null;
     }

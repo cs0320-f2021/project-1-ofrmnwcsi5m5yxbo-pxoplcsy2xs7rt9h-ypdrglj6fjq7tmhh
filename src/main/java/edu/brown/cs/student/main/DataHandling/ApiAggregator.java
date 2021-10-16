@@ -27,27 +27,53 @@ public class ApiAggregator {
     else if (type.equals("reviews")) {
       results = new ArrayList<Review[]>();
     }
-    else {
+    else if (type.equals("rent")){
       results = new ArrayList<Rental[]>();
     }
+    else if (type.equals("integration")) {
+      results = new ArrayList<StudentFromAPI[]>();
+    }
+    else {
+      throw new IllegalArgumentException();
+    }
     while (results.size() < 3) {
-      for (int i = 0; i < 5; i++) {
-        String finalURL = typedURL + numToWord[i];
-        String body = queryAPI(finalURL);
+      if (!type.equals("integration")) {
+        for (int i = 0; i < 5; i++) {
+          String finalURL = typedURL + numToWord[i];
+          String body = queryAPI(finalURL);
+          try {
+            DataType[] returnedResult = jsonreader.readData(body, type);
+            if (returnedResult != null) {
+              results.add(returnedResult);
+              System.out.println(returnedResult);
+            }
+          } catch (Exception e) {
+            System.out.println("bad endpoint, skipping");
+            continue;
+          }
+        }
+      }
+      else {
+        String body = queryAPIPOST(typedURL);
         try {
           DataType[] returnedResult = jsonreader.readData(body, type);
           if (returnedResult != null) {
             results.add(returnedResult);
           }
         } catch (Exception e) {
-          System.out.println("bad endpoint, skipping");
+          System.out.println("bad result, retrying");
           continue;
         }
       }
+
     }
     return combineResults(results);
   }
 
+  private String queryAPIPOST(String url) {
+    HttpRequest req = crq.getSecuredPostRequest(url);
+    return apiclient.makeRequest(req);
+  }
   private String queryAPI(String url) {
     HttpRequest req = crq.getSecuredGetRequest(url);
     return apiclient.makeRequest(req);
