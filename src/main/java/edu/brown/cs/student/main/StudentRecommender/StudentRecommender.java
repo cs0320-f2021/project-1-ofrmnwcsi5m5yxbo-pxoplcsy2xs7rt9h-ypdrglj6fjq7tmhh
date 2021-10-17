@@ -11,8 +11,10 @@ import edu.brown.cs.student.main.bloomfilter.recommender.Item;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A Recommender class specifically made to be used with Student objects
@@ -69,7 +71,7 @@ public class StudentRecommender<T extends Comparable<T> & Coord<T>, E extends It
   public List<String> getRecs(String identity, int r){
 
     //want to get all items possible in order to compare
-    // the results between the KDTree & BloomFitler
+    // the results between the KDTree & BloomFilter
     int k = treeItems.size();
 
     T target = null;
@@ -133,7 +135,7 @@ public class StudentRecommender<T extends Comparable<T> & Coord<T>, E extends It
     while(r > 0){
       //this would be the max possible index sum so we should stop search
       if(index > 2 * (bloomResults.size() - 1)){
-        break;
+        return finalResults;
       }
 
       if(indexSum.containsKey(index)){
@@ -150,6 +152,45 @@ public class StudentRecommender<T extends Comparable<T> & Coord<T>, E extends It
     }
 
     return finalResults;
+  }
+
+
+  /**
+   * Finds group recommendations
+   *
+   * @param groupSize- size of Groups to make
+   */
+  public String[][] getGroups(int groupSize){
+
+    int totalSize = treeItems.size();
+    int totalGroup = totalSize / 2;
+    if(totalSize % 2 != 0){
+      totalGroup += 1;
+    }
+
+    String[][] groups = new String[totalGroup][groupSize];
+    Set<String> alreadyUsed = new HashSet<>();
+
+    int idIndex = 0;
+    for(T item: treeItems){
+      String id = String.valueOf(item.getIdentity());
+      groups[idIndex][0] = id;
+      alreadyUsed.add(id);
+      List<String> sortedRecs = getRecs(id, totalSize);
+      int matchIndex = 1;
+
+      for (String rec: sortedRecs) {
+        if(!alreadyUsed.contains(rec)){
+          if(matchIndex < groupSize){
+            groups[idIndex][matchIndex] = rec;
+            matchIndex++;
+          }else{
+            break;
+          }
+        }
+      }
+    }
+    return groups;
   }
 
 

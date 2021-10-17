@@ -8,14 +8,17 @@ import edu.brown.cs.student.main.DataHandling.DataTypes.StudentNumeric;
 import java.util.ArrayList;
 import java.util.List;
 
-?/**
+/**
  * Example class on how to create Recommender with fewest steps
  *
  */
 public class ExampleRecommender {
 
-  //create new list of Student object, can be unsorted
+  //Recsys LoadProcess has method to getStudentList
+
+  //get new list of Student object, can be unsorted
   List<Student> studentList = new ArrayList<>();
+
 
 
   SetupStudentRecommender setup = new SetupStudentRecommender(studentList);
@@ -27,6 +30,8 @@ public class ExampleRecommender {
           0.1);
 
   List<String> results = recommender.getRecs("", 0);
+
+  String[][] groups = recommender.getGroups(2);
 
 }
 
