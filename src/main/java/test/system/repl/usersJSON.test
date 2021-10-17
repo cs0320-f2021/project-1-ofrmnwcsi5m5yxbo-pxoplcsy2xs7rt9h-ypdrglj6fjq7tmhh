@@ -1,0 +1,7 @@
+ARGS
+
+INPUT
+users data/project-1/justusersSMALL.json
+OUTPUT
+Loaded 15 users from data/project-1/justusersSMALL.json
+END

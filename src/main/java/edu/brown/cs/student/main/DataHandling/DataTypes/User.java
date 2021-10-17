@@ -121,7 +121,6 @@ public class User implements DataType, Coord<User>, Comparable<User> {
   @Override
   public double calcAxisDistance(int axis, User other) {
     if(axis == 0) {
-
       return Math.pow(other.getRealWeight() - this.getRealWeight(), 2);
     }else if (axis == 1) {
       return Math.pow(other.getRealHeight() - this.getRealHeight(), 2);

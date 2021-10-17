@@ -15,18 +15,6 @@ import java.util.Set;
  * T datatype must implement Comparable and Coord interface
  */
 public class KDTree<T extends Comparable<T> & Coord<T>> {
-  //need root that is of type Node
- //need a way to know how many dimensions and which attribute to compare at each level
-  //could be a list where we take the order and use that order as the pattern
-  //need way to add nodes
-  //need way to get value of node
-  //do we have to worry a bout balance RIGHT AWAY?
-  //are we given list of points? might have to make a processor class to sort then create KDTREE
-  //keep track of how many nodes are at each level
-  //when adding a node do we specificy at what depth
- //use custom compartors for each level
-
-
 
   private final int k;
   private final List<Comparator<T>> dimsToCompare;
