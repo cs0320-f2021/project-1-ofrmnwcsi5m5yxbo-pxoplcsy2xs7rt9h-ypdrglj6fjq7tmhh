@@ -190,6 +190,9 @@ public class StudentRecommender<T extends Comparable<T> & Coord<T>, E extends It
         }
       }
       idIndex++;
+      if (idIndex == groups.length) {
+        break;
+      }
     }
     return groups;
   }
