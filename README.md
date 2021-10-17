@@ -8,7 +8,7 @@ To run use:
 To start the server use:
 `./run --gui [--port=<port>]`
 
-API Endpoints:
+## API Endpoints:
 
   endpoint one: fairly fast, but often fails due to "malicious error"
   
@@ -20,7 +20,7 @@ API Endpoints:
   
   endpoint five: very fast, rarely fails, but sometimes gives incorrect return type (rentals or reviews).
 
-Adding new command to REPL: 
+## Adding new command to REPL: 
 1. Create a new java class that implements the interface ReplRunnable in ReplCommands/CommandRunnables.
    1. In the runCommand method, implement the desired behavior (printing should work as usual).
 2. Add the command to the hashmap replCommands in Main, with the first word of the command as the key and a new instance
@@ -28,3 +28,22 @@ Adding new command to REPL:
 3. If you need items that were loaded using another command, pass the created instance of the class that contains the
    data you need and place them in a field of your class. (See similar/classify commands and classes).
 4. repl should just "work": after adding entry to hashmap command should be callable.
+
+## Sprint Runnable Commands:
+1. Loading User data commands: 
+   1. `users online` for API
+   2. `users <filepath to .json>` for .json file
+2. Similar commands:
+   1. `similar <k> <some_user_id>`
+   2. `similar <k> <weight in lbs> <height in inches> <age in years>`
+3. Classify commands:
+   1. `classify <k> <some_user_id>`
+   2. `classify <k> <weight in lbs> <height in inches> <age in years>`
+
+## Integration Runnable Commands:
+1. `recsys_load responses` 
+   1. To load student responses from API and SQL database
+2. `recsys_rec <num_recs> <student_id>`
+   1. To generate recommendations for a particular student’s team
+3. `recsys_gen_groups <team_size>`
+   1. To generate the set of best matched teams across the entire class

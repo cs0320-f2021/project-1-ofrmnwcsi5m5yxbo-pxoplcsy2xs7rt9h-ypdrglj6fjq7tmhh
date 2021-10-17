@@ -73,6 +73,10 @@ public final class Main {
     replCommands.put("similar", new SimilarProcess((UserProcess) replCommands.get("users")));
     replCommands.put("classify", new ClassifyProcess((UserProcess) replCommands.get("users")));
     replCommands.put("recsys_load", new Recsys_LoadProcess());
+    replCommands.put("recsys_rec", new Recsys_RecProcess(
+        (Recsys_LoadProcess) replCommands.get("recsys_load")));
+    replCommands.put("recsys_gen_groups", new Recsys_Gen_GroupProcess(
+        (Recsys_LoadProcess) replCommands.get("recsys_load")));
     /*
      I imagine for any of the rec/grouping commands you would have to pass this recsys_load object
      to the constructor of the process (using replCommands.get("recsys_load"))

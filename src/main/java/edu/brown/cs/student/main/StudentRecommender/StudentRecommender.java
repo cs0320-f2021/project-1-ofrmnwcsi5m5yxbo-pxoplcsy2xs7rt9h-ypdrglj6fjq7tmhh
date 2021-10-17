@@ -107,9 +107,9 @@ public class StudentRecommender<T extends Comparable<T> & Coord<T>, E extends It
 
     //Printing the size of the two results bc I am not sure if BloomFilter excludes our target
     //which may lead to bugs
-    System.out.println("Size of kdTree results:" + kdResults.size());
+//    System.out.println("Size of kdTree results:" + kdResults.size());
 
-    System.out.println("Size of bloomFilter results:" + bloomResults.size());
+//    System.out.println("Size of bloomFilter results:" + bloomResults.size());
 
 
     for(int i =0; i < bloomResults.size(); i++){

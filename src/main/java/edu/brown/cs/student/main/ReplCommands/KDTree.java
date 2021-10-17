@@ -66,7 +66,7 @@ public class KDTree<T extends Comparable<T> & Coord<T>> {
         newNode.setParent(checkAgainst);
         numNodes++;
         newNode.setId(numNodes);
-        System.out.println("inserted a node");
+//        System.out.println("inserted a node");
         return;
       }
 
@@ -80,7 +80,7 @@ public class KDTree<T extends Comparable<T> & Coord<T>> {
         newNode.setParent(checkAgainst);
         numNodes++;
         newNode.setId(numNodes);
-        System.out.println("inserted a node");
+//        System.out.println("inserted a node");
         return;
       }
     }
@@ -265,7 +265,7 @@ public class KDTree<T extends Comparable<T> & Coord<T>> {
     for (int i = 0; i < neighbors.size(); i++) {
       if (neighbors.get(i).getValue().calcDistance(target) >= distCurrent) {
         neighbors.add(i, current );
-        System.out.println(current.getValue().coordString() + " inserted at " + i);
+//        System.out.println(current.getValue().coordString() + " inserted at " + i);
         break;
       }
     }
@@ -280,14 +280,14 @@ public class KDTree<T extends Comparable<T> & Coord<T>> {
   public void printTree(Node<T> node, String indent) {
    String coord = "";
    coord += (node.getValue().coordString()) +  " dim: " + (node.getDepth() % k);
-   System.out.println(coord);
+//   System.out.println(coord);
    if (node.getLeft() != null) {
      System.out.print(indent + "Left: ");
      this.printTree(node.getLeft(), indent + indent);
    }
     if (node.getRight() != null) {
 
-      System.out.print(indent + "Right: ");
+//      System.out.print(indent + "Right: ");
       this.printTree(node.getRight(), indent + indent);
     }
 
